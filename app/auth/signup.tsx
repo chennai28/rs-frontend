@@ -1,8 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as yup from "yup";
+import BlobBackground from "../../components/ui/BlobBackground";
 import Colors from "../../constants/Colors";
 
 // 📄 Form schema
@@ -26,74 +34,84 @@ export default function SignUpScreen() {
 
   const onSubmit = (data: any) => {
     Alert.alert("Signup Data", JSON.stringify(data, null, 2));
-    // TODO: Connect to Supabase here
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+    <View style={{ flex: 1 }}>
+      <BlobBackground stage={3} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Create Account</Text>
 
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor={Colors.gray}
-            style={styles.input}
-            value={value}
-            onChangeText={onChange}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor={Colors.gray}
+              style={styles.input}
+              value={value}
+              onChangeText={onChange}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+          )}
+        />
+        {errors.email && (
+          <Text style={styles.error}>{errors.email.message}</Text>
         )}
-      />
-      {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor={Colors.gray}
-            style={styles.input}
-            value={value}
-            onChangeText={onChange}
-            secureTextEntry
-          />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor={Colors.gray}
+              style={styles.input}
+              value={value}
+              onChangeText={onChange}
+              secureTextEntry
+            />
+          )}
+        />
+        {errors.password && (
+          <Text style={styles.error}>{errors.password.message}</Text>
         )}
-      />
-      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-      <Controller
-        control={control}
-        name="confirmPassword"
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Confirm Password"
-            placeholderTextColor={Colors.gray}
-            style={styles.input}
-            value={value}
-            onChangeText={onChange}
-            secureTextEntry
-          />
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Confirm Password"
+              placeholderTextColor={Colors.gray}
+              style={styles.input}
+              value={value}
+              onChangeText={onChange}
+              secureTextEntry
+            />
+          )}
+        />
+        {errors.confirmPassword && (
+          <Text style={styles.error}>{errors.confirmPassword.message}</Text>
         )}
-      />
-      {errors.confirmPassword && (
-        <Text style={styles.error}>{errors.confirmPassword.message}</Text>
-      )}
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleSubmit(onSubmit)}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.darkBlue,
+    backgroundColor: "transparent",
     padding: 24,
     justifyContent: "center",
   },

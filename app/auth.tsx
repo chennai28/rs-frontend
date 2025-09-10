@@ -1,38 +1,39 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
-import { StyleSheet } from "react-native";
-
+import BlobBackground from "../components/ui/BlobBackground";
 
 export default function AuthLanding() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Chaos Clock</Text>
-      <Text style={styles.subtitle}>Let’s log you in or get started!</Text>
+    <View style={{ flex: 1 }}>
+      <BlobBackground stage={2} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome to Chaos Clock</Text>
+        <Text style={styles.subtitle}>Let’s log you in or get started!</Text>
 
-      <TouchableOpacity
-        style={styles.buttonPrimary}
-        onPress={() => router.push("/auth/signup")}
+        <TouchableOpacity
+          style={styles.buttonPrimary}
+          onPress={() => router.push("/auth/signup")}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
 
-      >
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.buttonSecondary}
-        onPress={() => router.push("/auth/signin")}
-      >
-        <Text style={styles.buttonText}>Sign In</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonSecondary}
+          onPress={() => router.push("/auth/signin")}
+        >
+          <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.darkBlue,
     alignItems: "center",
     justifyContent: "center",
     padding: 24,

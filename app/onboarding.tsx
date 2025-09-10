@@ -1,29 +1,32 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import BlobBackground from "../components/ui/BlobBackground";
 import Colors from "../constants/Colors";
-import { StyleSheet } from "react-native";
 
 export default function OnboardingScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hi! 👋</Text>
-      <Text style={styles.subtitle}>Let’s Get Started with Chaos Clock</Text>
+    <View style={{ flex: 1 }}>
+      <BlobBackground stage={1} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Hi! 👋</Text>
+        <Text style={styles.subtitle}>Let’s Get Started with Chaos Clock</Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/auth")}
-      >
-        <Text style={styles.buttonText}>Continue</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/auth")}
+        >
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.darkBlue,
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
