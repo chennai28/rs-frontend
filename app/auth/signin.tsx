@@ -2,33 +2,52 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-    Alert,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import * as yup from "yup";
 import BlobBackground from "../../components/ui/BlobBackground";
 import Colors from "../../constants/Colors";
 
-// 📄 Form schema
-const schema = yup.object().shape({
-  email: yup.string().email("Invalid email").required("Required"),
-  password: yup.string().required("Required"),
+type SignInForm = {
+  email: string;
+  password: string;
+};
+
+const schema: yup.ObjectSchema<SignInForm> = yup.object({
+  email: yup
+    .string()
+    .trim()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+  .string()
+  .trim()
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/,
+    "8+ chars incl. upper, lower, number & symbol"
+  )
+  .required("Password is required"),
 });
 
 export default function SignInScreen() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm({
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<SignInForm>({
     resolver: yupResolver(schema),
+    defaultValues: { email: "", password: "" },
+    mode: "onChange",        // validate as user types
+    reValidateMode: "onChange",
+    criteriaMode: "firstError",
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: SignInForm) => {
     Alert.alert("Login Attempt", JSON.stringify(data, null, 2));
     // TODO: Add Supabase sign-in logic here
   };
@@ -42,33 +61,47 @@ export default function SignInScreen() {
         <Controller
           control={control}
           name="email"
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               placeholder="Email"
               placeholderTextColor={Colors.gray}
-              style={styles.input}
+              style={[
+                styles.input,
+                errors.email && { borderColor: Colors.crimson },
+              ]}
               value={value}
               onChangeText={onChange}
+              onBlur={onBlur}
               autoCapitalize="none"
+              autoCorrect={false}
               keyboardType="email-address"
+              textContentType="emailAddress"
+              accessibilityLabel="Email"
+              returnKeyType="next"
             />
           )}
         />
-        {errors.email && (
-          <Text style={styles.error}>{errors.email.message}</Text>
-        )}
+        {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
 
         <Controller
           control={control}
           name="password"
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               placeholder="Password"
               placeholderTextColor={Colors.gray}
-              style={styles.input}
+              style={[
+                styles.input,
+                errors.password && { borderColor: Colors.crimson },
+              ]}
               value={value}
               onChangeText={onChange}
+              onBlur={onBlur}
               secureTextEntry
+              textContentType="password"
+              accessibilityLabel="Password"
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit(onSubmit)}
             />
           )}
         />
@@ -77,7 +110,11 @@ export default function SignInScreen() {
         )}
 
         <TouchableOpacity
-          style={styles.button}
+          style={[
+            styles.button,
+            (!isValid || isSubmitting) && { opacity: 0.6 },
+          ]}
+          disabled={!isValid || isSubmitting}
           onPress={handleSubmit(onSubmit)}
         >
           <Text style={styles.buttonText}>Sign In</Text>
